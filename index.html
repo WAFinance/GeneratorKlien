@@ -362,20 +362,18 @@ function buildDashboard(nama, sheetId, sheetN, users){
   var e2 = html.indexOf(';', i2);
   if(i2 > -1) html = html.slice(0,i2) + 'const SHEET_NAME = "' + sheetN + '"' + html.slice(e2);
 
-  // Ganti UMAP
+  // Ganti UMAP — skip "};" (2 chars) agar tidak double brace
   var i3 = html.indexOf('const UMAP');
-  var e3 = html.indexOf('};', i3);
-  if(i3 > -1) html = html.slice(0,i3) + 'const UMAP = {\n' + umapEntries + '\n}' + html.slice(e3);
+  var e3 = html.indexOf('};', i3) + 2;
+  if(i3 > -1) html = html.slice(0,i3) + 'const UMAP = {\n' + umapEntries + '\n};' + html.slice(e3);
 
   // Ganti title
   var i4 = html.indexOf('<title>Catatan Pengeluaran');
   var e4 = html.indexOf('</title>', i4) + 8;
   if(i4 > -1) html = html.slice(0,i4) + '<title>Catatan Pengeluaran \u00b7 ' + nama + '</title>' + html.slice(e4);
 
-  // Ganti heading
-  var headOld = '\ud83d\udcb0 Catatan <em>Pengeluaran</em> Keluarga Febrian';
-  var headNew = '\ud83d\udcb0 Catatan <em>Pengeluaran</em> ' + nama;
-  html = html.split(headOld).join(headNew);
+  // Ganti semua sisa "Keluarga Febrian" dengan nama klien
+  html = html.split('Keluarga Febrian').join(nama);
 
   // Fix script tags
   html = html.split('<\\/script>').join('<' + '/script>');
